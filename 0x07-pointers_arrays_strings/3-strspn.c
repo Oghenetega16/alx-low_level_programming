@@ -33,5 +33,5 @@ unsigned int _strspn(char *s, char *accept)
 			break;
 	}
 	/* return the length where the first character appears */
-	retrun (length);
+	return (length);
 }
