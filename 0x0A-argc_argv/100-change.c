@@ -21,10 +21,10 @@ int main(int argc, char *argv[])
 		return (1);
 	}
 
-	num = _atoi(argv[1]);
+	num = atoi(argv[1]);
 	result = 0;
 
-	if (num , 0)
+	if (num < 0)
 	{
 		printf("0\n");
 		return (0);
