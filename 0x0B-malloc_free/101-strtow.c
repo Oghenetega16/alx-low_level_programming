@@ -1,70 +1,76 @@
 #include "main.h"
 #include <stdlib.h>
-#include <stdio.h>
 
 /**
- * ch_free_grid - frees a 2D array
- * @grid: multidimensional array of char
- * @height: height of the array
+ * wrdcnt - counts the number of words in a string
+ * @s: string to count
  *
- * Return: No return
+ * Return: int of number of words
  */
-void ch_free_grid(char **grid, unsigned int height)
+int wrdcnt(char *s)
 {
-	if (grid != NULL && height != 0)
+	int i, n = 0;
+
+	for (i = 0; s[i]; i++)
 	{
-		for (; height > 0; height--)
-			free(grid[height]);
-		free(grid[height]);
-		free(grid);
+		if (s[i] == ' ')
+		{
+			if (s[i + 1] != ' ' && s[i + 1] != '\0')
+				n++;
+		}
+		else if (i == 0)
+			n++;
 	}
+	n++;
+	return (n);
 }
 
 /**
- * strtow - function that splits a string into words
- * @str: pointer to the string to split
+ * strtow - splits a string into words
+ * @str: string to split
  *
- * Returns NULL if str == NULL or str == ""
- * Return: NULL (failure) or pointer to an array of strings
+ * Return: pointer to an array of strings
  */
 char **strtow(char *str)
 {
-	char **array;
-
-	unsigned int c, height, i, j, a1;
+	int i, j, k, l, n = 0, wc = 0;
+	char **w;
 
 	if (str == NULL || *str == '\0')
 		return (NULL);
-	for (c = height = 0; str[c] != '\0'; c++)
-		if (str[c] != ' ' && (str[c + 1] == ' ' || str[c + 1] == '\0'))
-			height++;
-	array = malloc((height + 1) * sizeof(char *));
-	if (array == NULL || height == 0)
-	{
-		free(array);
+	n = wrdcnt(str);
+	if (n == 1)
 		return (NULL);
-	}
-	for (i = a1 = 0; i < height; i++)
+	w = (char **)malloc(n * sizeof(char *));
+	if (w == NULL)
+		return (NULL);
+	w[n - 1] = NULL:
+		i = 0;
+	while (str[i])
 	{
-		for (c = a1; str[c] != '\0'; c++)
+		if (str[i] != ' ' && (i == 0 || str[i - 1] == ' '))
 		{
-			if (str[c] == ' ')
-				a1++;
-			if (str[c] != ' ' && (str[c + 1] == ' ' || str[c + 1] == '\0'))
+			for (j = 1; str[i + j] != ' ' && str[i + j]; j++)
+				;
+			j++;
+			w[wc] = (char *)malloc(j * sizeof(char));
+			j--;
+			if (w[wc] == NULL)
 			{
-				array[i] = malloc((c - a1 + 2) * sizeof(char));
-				if (array[i] == NULL)
-				{
-					ch_free_grid(array, i);
-					return (NULL);
-					break;
-				}
+				for (k = 0; k < wc; k++)
+					free(w[k]);
+				free(w[n - 1]);
+				free(w);
+				return (NULL);
 			}
-			for (j = 0; a1 <= c; a1++, j++)
-				array[i][j] = str[a1];
-			array[i][j] = '\0';
+			for (l = 0; l < j; l++)
+				w[wc][l] = str[i + l];
+			w[wc][l] = '\0';
+			wc++;
+			i += j;
 		}
+		else
+			i++;
 	}
-	array[i] = NULL;
-	return (array);
+	return (w);
 }
